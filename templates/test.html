@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image To Web</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <style>
+      /* Add custom styles for the image preview and loading animation */
+      #image-preview {
+        max-width: 100%;
+        max-height: 200px;
+        margin-top: 10px;
+      }
+
+      #loading-spinner {
+        display: none;
+      }
+    </style>
+  </head>
+  <body class="bg-white dark:bg-gray-900">
+    <div class="mx-auto container py-12 px-6">
+        <h2 class="text-4xl font-semibold text-center text-gray-800">
+            Image To Web
+          </h2>
+    
+          <div class="mt-8 text-center">
+            <p class="text-lg text-gray-600 dark:text-gray-400">
+              Select an image to convert it to HTML and CSS.
+            </p>
+    
+            <div class="mt-4">
+              <label for="image-upload" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-offset-2 dark:focus:ring-indigo-700">
+                <input type="file" id="image-upload" name="image" accept="image/*" class="sr-only" />
+                Select Image
+              </label>
+            </div>
+    
+            <!-- Image preview -->
+            <img id="image-preview" alt="Image Preview" />
+            
+            <!-- Loading spinner -->
+            <div id="loading-spinner" class="mt-4 text-indigo-500 animate-spin">
+              <i class="fas fa-circle-notch fa-2x"></i>
+            </div>
+          </div>
+    
+          <div class="mt-8 flex justify-center">
+            <button
+              type="button"
+              id="gen-button"
+              class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Gen
+            </button>
+          </div>
+
+      <!-- Output Box with Title, Enhanced UI, and Copy Button -->
+      <div class="mt-12">
+        <h3 class="text-2xl font-semibold text-center text-gray-800 dark:text-white mb-4">
+          Generated HTML and CSS
+        </h3>
+        <div id="output" class="p-6 border border-gray-300 rounded-md shadow-md bg-white dark:bg-gray-800">
+          <!-- Output content will be displayed here -->
+        </div>
+        
+        <!-- Copy Button -->
+        <div class="mt-4 text-center">
+          <button
+            type="button"
+            id="copy-button"
+            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Copy
+          </button>
+        </div>
+      </div>
+    </div>
+    <script>
+      const imageUpload = document.getElementById('image-upload');
+      const genButton = document.getElementById('gen-button');
+      const output = document.getElementById('output');
+      const imagePreview = document.getElementById('image-preview');
+      const loadingSpinner = document.getElementById('loading-spinner');
+      const copyButton = document.getElementById('copy-button');
+
+      imageUpload.addEventListener('change', () => {
+        const file = imageUpload.files[0];
+        if (file) {
+          const reader = new FileReader();
+
+          reader.onload = () => {
+            imagePreview.src = reader.result;
+            imagePreview.style.display = 'block';
+          };
+
+          reader.readAsDataURL(file);
+        }
+      });
+
+      genButton.addEventListener('click', async () => {
+        const file = imageUpload.files[0];
+        if (!file) {
+          alert('Please select an image before generating.');
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('image', file);
+
+        // Display loading spinner
+        loadingSpinner.style.display = 'block';
+
+        const response = await fetch('/api/image-to-html', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        // Hide loading spinner
+        loadingSpinner.style.display = 'none';
+
+        // Display generated HTML code as plain text
+        output.innerText = data.html;
+      });
+
+      // Copy to Clipboard
+      copyButton.addEventListener('click', () => {
+        const textToCopy = output.innerText;
+
+        // Create a textarea element to hold the text
+        const textarea = document.createElement('textarea');
+        textarea.value = textToCopy;
+        document.body.appendChild(textarea);
+
+        // Select the text in the textarea
+        textarea.select();
+        document.execCommand('copy');
+
+        // Remove the textarea
+        document.body.removeChild(textarea);
+
+        // You can provide feedback to the user, e.g., change button text
+        copyButton.innerText = 'Copied!';
+      });
+    </script>
+  </body>
+</html>
