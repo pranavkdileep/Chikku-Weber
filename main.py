@@ -4,6 +4,10 @@ from flask import Flask, render_template, request, jsonify
 import os
 import random
 import string
+from dotenv import load_dotenv
+load_dotenv()
+
+api_key = os.environ.get('API_KEY')
 
 app = Flask(__name__,template_folder='templates')
 
@@ -48,7 +52,7 @@ def generate_demo_output():
 
 def generate_web_page_code(image_path):
     # Configure API key
-    genai.configure(api_key="AIzaSyAQWX0vJtYka3kD5TFZ_6KRgp76GGi2mDQ")
+    genai.configure(api_key=api_key)
 
     # Set up the model
     generation_config = {
