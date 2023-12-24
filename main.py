@@ -25,15 +25,14 @@ def image_to_html():
     if file.filename == '':
         return jsonify({'error': 'No selected image'}), 400
 
-    # Generate a random filename
+
     filename = generate_random_filename()
 
-    # Save the file
+    
     file_path = os.path.join('uploads', filename)
     file.save(file_path)
 
-    # You can replace this with your actual logic to generate HTML and CSS from the image
-    # For now, just return a demo output
+    
     demo_output = generate_web_page_code(file_path)
 
     return jsonify({'html': demo_output})
@@ -43,8 +42,7 @@ def generate_random_filename():
     return ''.join(random.choice(letters_and_digits) for _ in range(10)) + '.jpg'
 
 def generate_demo_output():
-    # Replace this with your actual logic to generate HTML and CSS from the image
-    # For now, return a simple demo output
+    
     return '<div class="demo-output">Generated HTML and CSS</div>'
 
 
@@ -85,7 +83,7 @@ def generate_web_page_code(image_path):
                                   generation_config=generation_config,
                                   safety_settings=safety_settings)
 
-    # Validate that an image is present
+    
     if not (img := Path(image_path)).exists():
         raise FileNotFoundError(f"Could not find image: {img}")
 
@@ -106,7 +104,7 @@ def generate_web_page_code(image_path):
     return f'{result}'
 
 if __name__ == '__main__':
-    # Ensure 'uploads' folder exists
+    
     os.makedirs('uploads', exist_ok=True)
 
     app.run(debug=True)
