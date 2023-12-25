@@ -13,7 +13,7 @@ app = Flask(__name__,template_folder='templates')
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('newui.html')
 
 @app.route('/api/image-to-html', methods=['POST'])
 def image_to_html():

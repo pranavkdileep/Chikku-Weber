@@ -21,7 +21,7 @@
   </head>
   <body class="bg-white dark:bg-gray-900">
     <div class="mx-auto container py-12 px-6">
-        <h2 class="text-4xl font-semibold text-center text-gray-800">
+        <h2 class="text-4xl font-semibold text-center text-gray-800 dark:text-green-600">
             Weber Ai
           </h2>
     
@@ -115,6 +115,7 @@
         const response = await fetch('/api/image-to-html', {
           method: 'POST',
           body: formData,
+          timeout: 600000,
         });
 
         const data = await response.json();
