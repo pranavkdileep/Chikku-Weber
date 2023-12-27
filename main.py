@@ -15,6 +15,10 @@ app = Flask(__name__,template_folder='templates')
 def index():
     return render_template('newui.html')
 
+@app.route('/ads.txt', methods=['GET'])
+def ads():
+    return render_template('ads.txt')
+
 @app.route('/api/image-to-html', methods=['POST'])
 def image_to_html():
     if 'image' not in request.files:
